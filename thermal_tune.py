@@ -20,10 +20,10 @@ data = np.genfromtxt("C:\Users\Ed\Desktop\PSD_0010.txt")
 data_t = data.transpose()
 w = data_t[0]
 yn = data_t[1]
-ceiling = max(yn)
-max_pos = yn.tolist().index(max(yn))
 floor = min(yn)
 PSD = yn - floor
+
+max_pos = yn.tolist().index(max(yn))
 
 ##w_0 = float(input("Enter the resonance frequency in kHz: "))
 
