@@ -18,20 +18,25 @@ def stiffness(T, A, B):
 
 data = np.genfromtxt("C:\Users\Ed\Desktop\PSD_0010.txt")
 data_t = data.transpose()
-print data_t
+w = data_t[0]
+yn = data_t[1]
+ceiling = max(yn)
+max_pos = yn.tolist().index(max(yn))
+floor = min(yn)
+PSD = yn - floor
 
-w_0 = float(input("Enter the resonance frequency in kHz: "))
+##w_0 = float(input("Enter the resonance frequency in kHz: "))
 
-w = np.linspace(0,100,200)
-y = func(w, 10, 2, 1, 53)
-yn = y + 0.2*np.random.normal(size=len(w))
+##w = np.linspace(0,100,200)
+##y = func(w, 10, 2, 1, 53)
+##yn = y + 0.2*np.random.normal(size=len(w))
 
-tst = lambda x, a, b, c: func(x, a, b, c, w_0)
+tst = lambda x, a, b, c: func(x, a, b, c, w[max_pos])
 
-popt, pcov = curve_fit(tst, w, yn)
+popt, pcov = curve_fit(tst, w, PSD)
 
 plt.figure()
-plt.plot(w, yn, 'r.')
+plt.plot(w, PSD, 'r.')
 plt.plot(w, tst(w, popt[0], popt[1], popt[2]), 'b')
 
 plt.show()
