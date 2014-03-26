@@ -16,6 +16,10 @@ def stiffness(T, A, B):
     C = 0.8417
     return C*k_B*T*np.sqrt(B)/(np.pi*A)
 
+data = np.genfromtxt("C:\Users\Ed\Desktop\PSD_0010.txt")
+data_t = data.transpose()
+print data_t
+
 w_0 = float(input("Enter the resonance frequency in kHz: "))
 
 w = np.linspace(0,100,200)
