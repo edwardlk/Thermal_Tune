@@ -16,29 +16,54 @@ def stiffness(T, A, B):
     C = 0.8417
     return C*k_B*T*np.sqrt(B)/(np.pi*A)
 
-data = np.genfromtxt("C:\Users\Ed\Desktop\PSD_0010.txt")
+data = np.genfromtxt("C:\Users\ADMIN\Desktop\Waveform01.txt", skip_header=1)
 data_t = data.transpose()
-w = data_t[0]
-yn = data_t[1]
-floor = min(yn)
-PSD = yn - floor
+freq = data_t[0]
+FFT_dBV = data_t[1]
 
-max_pos = yn.tolist().index(max(yn))
+F_s = 200000
+N = 2000
 
-##w_0 = float(input("Enter the resonance frequency in kHz: "))
+FFT_V = np.zeros(len(FFT_dBV))
+PSD_V2 = np.zeros(len(FFT_dBV))
 
-##w = np.linspace(0,100,200)
-##y = func(w, 10, 2, 1, 53)
-##yn = y + 0.2*np.random.normal(size=len(w))
+for x in range(len(FFT_dBV)):
+	FFT_V[x] = 10**(FFT_dBV[x]/20)
+	PSD_V2[x] = abs(FFT_V[x])**2 / (F_s * N)
+	
+peak = np.argmax(PSD_V2[10:])+10
 
-tst = lambda x, a, b, c: func(x, a, b, c, w[max_pos])
-
-popt, pcov = curve_fit(tst, w, PSD)
+tst = lambda x, a, b, c: func(x, a, b, c, freq[peak])
+popt, pcov = curve_fit(tst, freq, PSD_V2)
 
 plt.figure()
-plt.plot(w, PSD, 'r.')
-plt.plot(w, tst(w, popt[0], popt[1], popt[2]), 'b')
-
+plt.plot(freq, PSD_V2, 'r.')
+plt.plot(freq, tst(freq, popt[0], popt[1], popt[2]), 'b')
 plt.show()
 
-print "stiffness is ", stiffness(300, popt[0], popt[1])
+# plt.figure()
+# plt.plot(freq[(peak-20):(peak+20)], PSD_V2[(peak-20):(peak+20)], 'r.')
+# plt.show()
+
+# floor = min(yn)
+# PSD = yn - floor
+
+# max_pos = yn.tolist().index(max(yn))
+
+# ##w_0 = float(input("Enter the resonance frequency in kHz: "))
+
+# ##w = np.linspace(0,100,200)
+# ##y = func(w, 10, 2, 1, 53)
+# ##yn = y + 0.2*np.random.normal(size=len(w))
+
+# tst = lambda x, a, b, c: func(x, a, b, c, w[max_pos])
+
+# popt, pcov = curve_fit(tst, w, PSD)
+
+# plt.figure()
+# plt.plot(w, PSD, 'r.')
+# plt.plot(w, tst(w, popt[0], popt[1], popt[2]), 'b')
+
+# plt.show()
+
+# print "stiffness is ", stiffness(300, popt[0], popt[1])
