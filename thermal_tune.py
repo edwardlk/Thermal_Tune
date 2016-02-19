@@ -2,13 +2,17 @@
 ##
 ##                             Thermal Tune from PSD
 ##
-## 22 header lines on labview data files
+## 02/19/2016 Restarting this work. It turns out that the agilent AFM has FFT-
+## capturing capabilities. Currently the curve is assumed to be smoothed + fit 
+## externally (i.e. in orgin) with a Lorentzian, so this will just calculate 
+## the stiffness from the parameters.
 
 import numpy as np
 
 def stiffness(T, s, A, L, D):
 	k_B = 1.3806 * 10**-23
-	return 0.8174*k_B*T/(s**2*A)*((2*L-3*D)/(2*L-4*D))**2
+	S=1/s**2
+	return 0.8174*k_B*T/(S*A)*((2*L-3*D)/(2*L-4*D))**2
 
 def stiff_error(k, A, D, L, s_A, s_D, s_L):
 	X = 4/(6*D**2-7*D*L+2*L**2)
@@ -21,9 +25,9 @@ rows = data.shape[0]
 columns = data.shape[1]
 
 
-
 # Old Code from using oscilloscope
 
+# 22 header lines on labview data files
 
 # import numpy as np
 # import matplotlib.pyplot as plt
